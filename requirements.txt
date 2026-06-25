@@ -1,0 +1,23 @@
+# Python dependencies for the RBMK educational simulator dashboard, tooling and docs.
+# Python >= 3.12 required (developed against 3.14).
+
+# Dashboard / UI
+PySide6>=6.10,<6.12
+pyqtgraph>=0.13.7
+
+# Numerics and logging
+numpy>=2.3
+h5py>=3.15
+
+# Testing
+pytest>=8.4
+pytest-qt>=4.4
+
+# Lint / format
+ruff>=0.8
+
+# Documentation
+sphinx>=8.1
+myst-parser>=4.0
+furo>=2024.8
+sphinxcontrib-mermaid>=1.0

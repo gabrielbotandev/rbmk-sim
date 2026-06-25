@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "name": "chernobyl-1986-timeline",
+  "title": "Chernobyl Unit 4 — 25/26 April 1986 (educational timeline)",
+  "description": "A qualitative, educational walk through the documented sequence of events preceding the Chernobyl accident, used to drive the RBMK-SIM toy model. Historical narrative (INSAG-7 summary level) is strictly separated from scripted model actions. The model is not a reconstruction: magnitudes, timings of the physical response, and every coefficient are simplified teaching values.",
+  "sources": [
+    "IAEA INSAG-7, 'The Chernobyl Accident: Updating of INSAG-1', 1992 (public summary)",
+    "Standard reactor-physics textbooks for xenon poisoning, void and Doppler feedback"
+  ],
+  "disclaimer": "Educational narrative driving a toy model. NOT a reconstruction, NOT operational data, and unsuitable for any safety-related use.",
+  "config": {
+    "rod_design": "1986",
+    "num_channels": 12,
+    "dt_s": 0.05,
+    "initial_power_frac": 1.0,
+    "initial_manual_rod_insertion": 0.35,
+    "ar_enabled": true,
+    "detector_noise": false
+  },
+  "events": [
+    {
+      "id": "e01-rampdown",
+      "offset_s": 0,
+      "label": "25 Apr 01:06 — power reduction begins",
+      "historical": true,
+      "narrative": "Operators begin reducing power from full output in preparation for a turbine rundown test planned for that day. The test is to show that a coasting turbogenerator can power the main coolant pumps during a station blackout until the diesels start.",
+      "model_note": "Model: power setpoint lowered to 50% of nominal; the automatic regulator (AR) bank inserts to follow it.",
+      "actions": [
+        { "command": "set_power_setpoint", "args": [0.5] }
+      ]
+    },
+    {
+      "id": "e02-xenon",
+      "offset_s": 7200,
+      "label": "25 Apr ~03:06 — xenon transient under way",
+      "historical": false,
+      "narrative": "MODEL ILLUSTRATION: after a power reduction, iodine-135 created at high power keeps decaying into xenon-135 while xenon burnup has halved, so the poison level climbs for hours before settling back. The automatic regulator must continuously withdraw its bank to compensate.",
+      "model_note": "Model: no scripted action — watch rho_xenon deepen and the AR bank position drift outward to hold 50%.",
+      "actions": []
+    },
+    {
+      "id": "e03-eccs",
+      "offset_s": 46440,
+      "label": "25 Apr 14:00 — ECCS disconnected; grid dispatcher delays the test",
+      "historical": true,
+      "narrative": "The emergency core cooling system is disconnected per the test programme. Around the same time the Kyiv grid controller asks the unit to keep generating; the reactor is held near half power for some nine more hours, far longer than planned.",
+      "model_note": "Model: no action — the toy model has no ECCS; the hold at 50% continues while the xenon transient passes its peak.",
+      "actions": []
+    },
+    {
+      "id": "e04-hold",
+      "offset_s": 61200,
+      "label": "25 Apr ~18:00 — extended hold at half power",
+      "historical": true,
+      "narrative": "The unit waits at roughly half power. The crew that prepared for the test hands over to the night shift, which has had little time to prepare.",
+      "model_note": "Model: no action — the xenon transient has peaked and is decaying; the AR bank drifts back inward.",
+      "actions": []
+    },
+    {
+      "id": "e05-resume",
+      "offset_s": 79440,
+      "label": "25 Apr 23:10 — power reduction resumes",
+      "historical": true,
+      "narrative": "Permission received, the descent toward the test level (700-1000 MWt) resumes.",
+      "model_note": "Model: setpoint lowered to ~22%; the AR inserts to follow.",
+      "actions": [
+        { "command": "set_power_setpoint", "args": [0.22] }
+      ]
+    },
+    {
+      "id": "e06-test-level",
+      "offset_s": 82500,
+      "label": "26 Apr ~00:01 — approaching the planned test level",
+      "historical": true,
+      "narrative": "Power approaches the lower end of the planned test band of 700-1000 MWt.",
+      "model_note": "Model: no action.",
+      "actions": []
+    },
+    {
+      "id": "e07-slump",
+      "offset_s": 83160,
+      "label": "26 Apr ~00:12 — power slumps to ~30 MWt",
+      "historical": true,
+      "narrative": "During the changeover of the power regulation mode, power falls almost to zero (about 30 MWt) instead of holding at the test level. With the core poisoned by xenon, regulations would have required shutting down; instead, recovery is attempted.",
+      "model_note": "Model: the slump is scripted by dropping the setpoint to 1% (the toy model cannot reproduce the actual regulation mishap); the AR drives its bank fully in.",
+      "actions": [
+        { "command": "set_power_setpoint", "args": [0.01] }
+      ]
+    },
+    {
+      "id": "e08-recovery",
+      "offset_s": 84000,
+      "label": "26 Apr ~00:26 — recovery toward ~200 MWt begins",
+      "historical": true,
+      "narrative": "Rather than shutting down the poisoned reactor, the operators raise power back toward a usable test level. The recovery is slow — the regulator can only add reactivity as fast as the rate limits allow, against poisoning that keeps deepening.",
+      "model_note": "Model: setpoint raised to ~6%. The AR bank withdraws under its period governor (no withdrawal while the period is shorter than 25 s), so the climb stays gentle.",
+      "actions": [
+        { "command": "set_power_setpoint", "args": [0.0625] }
+      ]
+    },
+    {
+      "id": "e08-stable",
+      "offset_s": 84840,
+      "label": "26 Apr ~00:40 — stabilised near 200 MWt; bank A withdrawn",
+      "historical": true,
+      "narrative": "Power stabilises around 200 MWt — well below the approved test band. To free regulating margin, manual absorbers continue to leave the core; the operating reactivity margin (a count of equivalent inserted rods) falls far below the minimum required by the operating rules.",
+      "model_note": "Model: manual bank A withdrawn toward 20%; the AR re-inserts to hold the setpoint — rods shuffle outward overall.",
+      "actions": [
+        { "command": "set_rod_target", "args": [0, 0.2] }
+      ]
+    },
+    {
+      "id": "e08-stable-b",
+      "offset_s": 85320,
+      "label": "26 Apr ~00:48 — bank B withdrawn",
+      "historical": false,
+      "narrative": "MODEL ILLUSTRATION: the mirror move of the other manual bank, staged to keep the reactor period long.",
+      "model_note": "Model: manual bank B withdrawn toward 20%.",
+      "actions": [
+        { "command": "set_rod_target", "args": [1, 0.2] }
+      ]
+    },
+    {
+      "id": "e09-pumps",
+      "offset_s": 86220,
+      "label": "26 Apr 01:03 — additional coolant pumps connected",
+      "historical": true,
+      "narrative": "Two more main coolant pumps are brought in for the test, raising core flow well above normal for this power. The extra flow suppresses boiling, which removes reactivity — operators withdraw rods further to hold power.",
+      "model_note": "Model: flow command raised to 125% and bank A withdrawn toward 8%. (At this low power the toy model's void is already nearly zero, so the effect is milder than the historical one.)",
+      "actions": [
+        { "command": "set_pump_flow", "args": [1.25] },
+        { "command": "set_rod_target", "args": [0, 0.08] }
+      ]
+    },
+    {
+      "id": "e09-pumps-b",
+      "offset_s": 86520,
+      "label": "26 Apr ~01:08 — bank B follows",
+      "historical": false,
+      "narrative": "MODEL ILLUSTRATION: the mirror withdrawal of the other manual bank.",
+      "model_note": "Model: bank B withdrawn toward 8% insertion.",
+      "actions": [
+        { "command": "set_rod_target", "args": [1, 0.08] }
+      ]
+    },
+    {
+      "id": "e10-orm",
+      "offset_s": 87000,
+      "label": "26 Apr ~01:16 — operating reactivity margin critically low",
+      "historical": true,
+      "narrative": "Nearly the entire absorber inventory has been pulled out of the core. INSAG-7 highlights this condition — very few rods inserted, high flow, low power — as the configuration in which the core was primed for the positive scram effect.",
+      "model_note": "Model: both manual banks to 2% insertion (graphite displacers parked in the lower core). The 1986-design worth curves now have their positive lobe directly ahead of them.",
+      "actions": [
+        { "command": "set_rod_target", "args": [0, 0.02] },
+        { "command": "set_rod_target", "args": [1, 0.02] }
+      ]
+    },
+    {
+      "id": "e11-test-start",
+      "offset_s": 87424,
+      "label": "26 Apr 01:23:04 — turbine rundown test begins",
+      "historical": true,
+      "narrative": "The turbine stop valves close and four main coolant pumps begin coasting down with the turbogenerator. Core flow starts to fall, boiling increases, and the positive void feedback begins adding reactivity. The regulating rods, already near their withdrawal limits, have little authority left.",
+      "model_note": "Model: flow command stepped down (first stage of the rundown) and the AR is released to manual — standing in for the regulating group reaching the limit of its worth. From here the void feedback acts unopposed.",
+      "actions": [
+        { "command": "set_ar_enabled", "args": [false] },
+        { "command": "set_pump_flow", "args": [0.9] }
+      ]
+    },
+    {
+      "id": "e12-rundown",
+      "offset_s": 87440,
+      "label": "26 Apr 01:23:20 — pumps coasting down",
+      "historical": true,
+      "narrative": "Flow continues to fall as the pumps run down; power begins to rise from the growing void fraction.",
+      "model_note": "Model: second stage of the flow rundown.",
+      "actions": [
+        { "command": "set_pump_flow", "args": [0.7] }
+      ]
+    },
+    {
+      "id": "e13-rundown2",
+      "offset_s": 87455,
+      "label": "26 Apr 01:23:35 — power rising",
+      "historical": true,
+      "narrative": "With flow still falling, the power rise steepens.",
+      "model_note": "Model: final stage of the flow rundown. The model's automatic protection may trip moments before the manual button — in either case the same rods drive in, so the qualitative outcome is unchanged.",
+      "actions": [
+        { "command": "set_pump_flow", "args": [0.55] }
+      ]
+    },
+    {
+      "id": "e14-az5",
+      "offset_s": 87460,
+      "label": "26 Apr 01:23:40 — AZ-5 pressed",
+      "historical": true,
+      "narrative": "The shift supervisor orders an emergency shutdown and AZ-5 is pressed: every control rod begins driving in from the top. In the 1986 design, the graphite displacers below the absorbers sweep through the lower core first, ADDING reactivity exactly where the core is most reactive — the 'positive scram' effect identified by INSAG-7 as the trigger of the power excursion.",
+      "model_note": "Model: AZ-5 pulse. Watch rho_rods rise briefly (displacer lobe) before plunging negative, and power spike before the absorbers win. The real core was destroyed seconds later; the toy model simply rings down — every curve beyond this point is qualitative illustration only.",
+      "actions": [
+        { "command": "press_az5" }
+      ]
+    },
+    {
+      "id": "e15-epilogue",
+      "offset_s": 87580,
+      "label": "26 Apr ~01:25 — end of the educational timeline",
+      "historical": true,
+      "narrative": "Two explosions destroyed the reactor at roughly 01:23:44-01:23:48. INSAG-7 attributes the accident to the combination of a positive-scram rod design, a large positive void coefficient at the operating state reached, and an operating organisation that allowed the reactor into that state. The post-accident design changes are explored in the Comparison tab.",
+      "model_note": "Model: nothing beyond this point corresponds to history — the simulator's smooth shutdown curve is exactly where toy model and reality part ways.",
+      "actions": []
+    }
+  ]
+}

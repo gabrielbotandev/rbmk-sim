@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rbmk-dash"
+version = "0.1.0"
+description = "Engineering dashboard for the RBMK-SIM educational reactor simulator"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+  "PySide6>=6.10",
+  "pyqtgraph>=0.13.7",
+  "numpy>=2.3",
+  "h5py>=3.15",
+]
+
+[project.scripts]
+rbmk-dash = "rbmk_dash.ui.app:main"
+rbmk-logtool = "rbmk_dash.cli.logtool:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+# The multiplication sign is intentional UI typography for speed labels.
+allowed-confusables = ["×"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

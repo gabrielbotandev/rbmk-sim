@@ -1,0 +1,46 @@
+# Static-analysis profile for the C/C++ safety-style code in this repository.
+#
+# True MISRA checkers are commercial; this project uses a "MISRA-inspired" subset
+# enforced by (a) this clang-tidy profile (cert / bugprone / hicpp families) and
+# (b) the manual rules documented in docs/development/coding_standard.md.
+# Any deviation must be justified in code with a NOTE(misra-dev): comment.
+#
+# Deliberately disabled checks (rationale):
+#   performance-enum-size            - enums cross the C ABI as uint32_t by design
+#   ...DeprecatedOrUnsafeBufferHandling - flags every memset in tests; bounded
+#                                      sizeof()-based uses are acceptable here
+#   readability-math-missing-parentheses - physics formulas follow textbook
+#                                      precedence; extra parens hurt review
+Checks: >
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,
+  hicpp-*,
+  misc-*,
+  performance-*,
+  readability-*,
+  cppcoreguidelines-init-variables,
+  cppcoreguidelines-no-malloc,
+  cppcoreguidelines-prefer-member-initializer,
+  -bugprone-easily-swappable-parameters,
+  -hicpp-uppercase-literal-suffix,
+  -readability-uppercase-literal-suffix,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -hicpp-signed-bitwise,
+  -misc-include-cleaner,
+  -readability-function-cognitive-complexity,
+  -misc-non-private-member-variables-in-classes,
+  -readability-convert-member-functions-to-static,
+  -readability-math-missing-parentheses,
+  -readability-use-concise-preprocessor-directives,
+  -performance-enum-size,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
+WarningsAsErrors: ''
+HeaderFilterRegex: '(kernel|protection|orchestrator)/(include|src)/.*'
+FormatStyle: file
+CheckOptions:
+  readability-braces-around-statements.ShortStatementLines: '0'
+  hicpp-braces-around-statements.ShortStatementLines: '0'
+  readability-function-size.LineLimit: '120'
+  readability-function-size.ParameterThreshold: '8'

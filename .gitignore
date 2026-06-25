@@ -1,0 +1,30 @@
+# Build trees
+build/
+build-*/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+dist/
+
+# Simulation run logs (HDF5 outputs are reproducible artifacts, not sources)
+runs/
+*.h5
+
+# Docs build
+docs/_build/
+
+# TLA+ tooling (downloaded jar) and TLC scratch output
+specs/tla/tools/
+specs/tla/states/
+*.toolbox/
+
+# Editors / OS noise
+.idea/
+.vscode/
+*.swp
+.DS_Store
